@@ -10,17 +10,20 @@ namespace Catalog.Controllers
 [Route("items")] 
 public class ItemsController : ControllerBase
 {
-    private readonly InMemItemsRepository repository;
+    private readonly IItemsRepository repository;
 
-/// <summary>
-/// Everytime a request is made to the controller, a new instance of the InMemItemsRepository() is created 
-/// </summary>
-    public ItemsController()
+    /// <summary>
+    /// Everytime a request is made to the controller, a new instance of the InMemItemsRepository() was being created
+    /// In order to avoid opearting on a concrete instance, IItemsRepository (interface) is injected in the controller.
+    /// that way ItemsController is not tightly coupled to a dependency.
+    /// </summary>
+    public ItemsController(IItemsRepository repository)
     {
-        repository = new InMemItemsRepository();
+        this.repository = repository;
     }
 
-    [HttpGet] // This attribute indicates that the method handles GET requests
+    // This attribute indicates that the method handles GET requests
+    [HttpGet] 
     public IEnumerable<Item> GetItems()
     {
         var items = repository.GetItems();

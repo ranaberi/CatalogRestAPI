@@ -3,7 +3,7 @@ using static Catalog.Repositories.InMemItemsRepository;
 
 namespace Catalog.Repositories
 {
-    public class InMemItemsRepository 
+    public class InMemItemsRepository : IItemsRepository
     {
         // This is a list of items that will be used to simulate a database  
         private readonly List<Item> items = new()
@@ -27,9 +27,4 @@ namespace Catalog.Repositories
         }
     }
 
-    public interface IItemsRepository
-    {
-        Item GetItem(Guid id);
-        IEnumerable<Item> GetItems();
-    }  
 }
