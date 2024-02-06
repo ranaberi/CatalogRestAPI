@@ -1,3 +1,4 @@
+using Catalog.Dtos;
 using Catalog.Entities;
 using Catalog.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -22,24 +23,35 @@ public class ItemsController : ControllerBase
         this.repository = repository;
     }
 
-    // This attribute indicates that the method handles GET requests
+    
+    /// <summary>
+    /// Translating the fetched item to an itemDto with the extension method AsDto()
+    /// [HttpGet] attribute indicates that the method handles GET requests
+    /// </summary>
+    /// <returns>ItemDto</returns>
     [HttpGet] 
-    public IEnumerable<Item> GetItems()
+    public IEnumerable<ItemDto> GetItems()
     {
-        var items = repository.GetItems();
+        var items = repository.GetItems().Select(item => item.AsDto());
         return items;
     }
 
     // Get/items/{id}
-    //ActionResult allows us to return a httpAction result or the object
+    /// <summary>
+    /// ActionResult allows us to return a httpAction result or the object.
+    /// GetItem gets the item first, checks if it is null then returns it as itemDto
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>itemDto</returns>
+    //
     [HttpGet("{id}")]
-    public ActionResult< Item> GetItem(Guid id)
+    public ActionResult<ItemDto> GetItem(Guid id)
     {
         var item = repository.GetItem(id);
         if(item is null){
             return NotFound();
         }
-        return item;
+        return item.AsDto();
     }
 }
 }
