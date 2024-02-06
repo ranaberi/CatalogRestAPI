@@ -75,6 +75,44 @@ public class ItemsController : ControllerBase
         return CreatedAtAction(nameof(GetItem), new {id = item.Id}, item.AsDto());
 
     }
+
+    ///<summary>
+    ///PUT/items/{id}
+    /// The convetion for put is to return nothing.
+    /// With-espression is specific to record types. 
+    /// It allows us to create a copy of the existing object with the modified properities for the new values.
+    /// Only possible during inialization since it is immutable
+    /// </summary>
+
+    [HttpPut("{id}")]
+    public ActionResult UpdateItem(Guid id, UpdateItemDto itemDto)
+    {
+        var existingItem = repository.GetItem(id);
+        if(existingItem is null)
+        {
+            return NotFound();
+        }
+        Item updatedItem = existingItem with
+        {
+            Name = itemDto.Name,
+            Price = itemDto.Price
+        };
+        repository.UpdateItem(updatedItem);
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult DeleteItem(Guid id)
+    {
+        var existingItem = repository.GetItem(id);
+        if(existingItem is null)
+        {
+            return NotFound();
+        }
+        repository.DeleteItem(id);
+        return NoContent();
+    }
 }
 }
 
