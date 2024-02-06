@@ -53,6 +53,28 @@ public class ItemsController : ControllerBase
         }
         return item.AsDto();
     }
+
+    ///<summary>
+    ///Post/items
+    /// ActionResult to return more than one object.
+    /// The convetion for post (create methods) is to create the objects than return the object that got created
+    /// and a header that specifies from where to get info about the created object
+    /// </summary>
+    [HttpPost]
+    public ActionResult<ItemDto> CreateItem(CreateItemDto itemDto)
+    {
+        Item item = new()
+        {
+            Id = Guid.NewGuid(),
+            Name = itemDto.Name,
+            Price = itemDto.Price,
+            CreatedDate = DateTimeOffset.UtcNow
+
+        };
+        repository.CreateItem(item);
+        return CreatedAtAction(nameof(GetItem), new {id = item.Id}, item.AsDto());
+
+    }
 }
 }
 

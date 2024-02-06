@@ -25,6 +25,11 @@ namespace Catalog.Repositories
             // This is a LINQ query that will return the first item or null if no item matches the id
             return items.Where(item => item.Id == id).SingleOrDefault();
         }
+
+        public void CreateItem(Item item)
+        {
+            items.Add(item);
+        }
     }
 
 }
