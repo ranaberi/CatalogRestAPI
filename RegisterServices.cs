@@ -10,7 +10,6 @@ namespace Catalog
 {
     public static class RegisterServices
     {
-        public static IConfiguration Configuration {get;}
         public static void ConfigureServices(this WebApplicationBuilder builder)
         {
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
@@ -23,12 +22,14 @@ namespace Catalog
             //so that only one copy of the instance of InMemItemsRepository across the entire lifetime
             //will be constructed and reused whenever it is needed
             builder.Services.AddSingleton<IItemsRepository, InMemItemsRepository>();
+            builder.Services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
             builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
             {
-                var settings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+                var settings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
                 return new MongoClient(settings.ConnectionString);
+
             });
-            builder.Services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
+            
         }
     }
 }
