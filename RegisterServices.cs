@@ -12,6 +12,7 @@ namespace Catalog
     {
         public static void ConfigureServices(this WebApplicationBuilder builder)
         {
+            //to serialize any Guid or DateTimeOffset into a string in the database
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
             builder.Services.AddEndpointsApiExplorer();
