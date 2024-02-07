@@ -17,7 +17,8 @@ namespace Catalog
             BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddControllers();
+            //Since .net removes the async suffix at run time, which is unwanted behabior
+            builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 
             //construsting this dependency by regestering it as a singleton 
             //so that only one copy of the instance of InMemItemsRepository across the entire lifetime
