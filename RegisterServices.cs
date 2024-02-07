@@ -1,0 +1,34 @@
+
+using Catalog.Repositories;
+using Catalog.Settings;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
+
+namespace Catalog
+{
+    public static class RegisterServices
+    {
+        public static IConfiguration Configuration {get;}
+        public static void ConfigureServices(this WebApplicationBuilder builder)
+        {
+            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddControllers();
+
+            //construsting this dependency by regestering it as a singleton 
+            //so that only one copy of the instance of InMemItemsRepository across the entire lifetime
+            //will be constructed and reused whenever it is needed
+            builder.Services.AddSingleton<IItemsRepository, InMemItemsRepository>();
+            builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
+            {
+                var settings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+                return new MongoClient(settings.ConnectionString);
+            });
+            builder.Services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
+        }
+    }
+}
