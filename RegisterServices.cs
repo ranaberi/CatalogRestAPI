@@ -25,12 +25,15 @@ namespace Catalog
             //will be constructed and reused whenever it is needed
             builder.Services.AddSingleton<IItemsRepository, InMemItemsRepository>();
             builder.Services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
-            builder.Services.AddSingleton<IMongoClient>(ServiceProvider =>
+            var mongoDbSettings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+            builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
             {
-                var settings = builder.Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-                return new MongoClient(settings.ConnectionString);
+                
+                return new MongoClient(mongoDbSettings.ConnectionString);
 
             });
+            builder.Services.AddHealthChecks()
+                            .AddMongoDb(mongoDbSettings.ConnectionString, name:"mongodb", timeout: TimeSpan.FromSeconds(3));
             
         }
     }
