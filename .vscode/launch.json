@@ -13,10 +13,6 @@
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
-            // "serverReadyAction": {
-            //     "action": "openExternally",
-            //     "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            // },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
@@ -28,6 +24,15 @@
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
+        },
+        {
+            "name": "Docker .NET Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "netCore": {
+                "appProject": "${workspaceFolder}/Catalog.csproj"
+            }
         }
     ]
 }

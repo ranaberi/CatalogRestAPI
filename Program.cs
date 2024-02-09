@@ -15,7 +15,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+
+    app.UseHttpsRedirection();
+
+
 app.MapControllers();
 
 //the predicate is a way to filter out which health checks to include in this endpoint
@@ -24,16 +27,19 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions
     Predicate =(check)=> check.Tags.Contains("ready"),
     ResponseWriter = async(context, report)=>
     {
-        var result = JsonSerializer.Serialize(
-            new{
-                status = report.Status.ToString(),
-                checks = report.Entries.Select(entry => new {
-                    name = entry.Key,
-                    status = entry.Value.Status.ToString(),
-                    exception = entry.Value.Exception != null ? entry.Value.Exception.Message : "none",
-                    duration = entry.Value.Duration.ToString()
+        var result = JsonSerializer.Serialize
+        (
+            new
+            {
+                    status = report.Status.ToString(),
+                    checks = report.Entries.Select(entry => new 
+                    {
+                        name = entry.Key,
+                        status = entry.Value.Status.ToString(),
+                        exception = entry.Value.Exception != null ? entry.Value.Exception.Message : "none",
+                        duration = entry.Value.Duration.ToString()
 
-                })
+                    })
 
             }
         );
