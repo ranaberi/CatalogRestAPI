@@ -32,8 +32,9 @@ namespace Catalog
                 return new MongoClient(mongoDbSettings.ConnectionString);
 
             });
+            //health check to see if the database is reachable
             builder.Services.AddHealthChecks()
-                            .AddMongoDb(mongoDbSettings.ConnectionString, name:"mongodb", timeout: TimeSpan.FromSeconds(3));
+                            .AddMongoDb(mongoDbSettings.ConnectionString, name:"mongodb", timeout: TimeSpan.FromSeconds(3), tags: new[]{"ready"});
             
         }
     }
