@@ -12,15 +12,17 @@ namespace Catalog.Controllers
 public class ItemsController : ControllerBase
 {
     private readonly IItemsRepository repository;
+    private readonly ILogger<ItemsController> logger;
 
     /// <summary>
     /// Everytime a request is made to the controller, a new instance of the InMemItemsRepository() was being created
     /// In order to avoid opearting on a concrete instance, IItemsRepository (interface) is injected in the controller.
     /// that way ItemsController is not tightly coupled to a dependency.
     /// </summary>
-    public ItemsController(IItemsRepository repository)
+    public ItemsController(IItemsRepository repository, ILogger<ItemsController> logger)
     {
         this.repository = repository;
+        this.logger = logger;
     }
 
     
@@ -33,6 +35,7 @@ public class ItemsController : ControllerBase
     public async Task<IEnumerable<ItemDto>> GetItemsAsync()
     {
         var items = (await repository.GetItemsAsync()).Select(item => item.AsDto());
+        logger.LogInformation($"{DateTime.UtcNow.ToString("hh:mm:ss")}: Retrived{items.Count()} items");
         return items;
     }
 

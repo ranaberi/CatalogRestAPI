@@ -36,11 +36,6 @@ namespace Catalog
             builder.Services.AddHealthChecks()
                             .AddMongoDb(mongoDbSettings.ConnectionString, name:"mongodb", timeout: TimeSpan.FromSeconds(3), tags: new[]{"ready"});
 
-            builder.Services.AddHttpsRedirection(options =>
-            {
-                options.HttpsPort =5001;
-            });
-            
-        }
+                    }
     }
 }
