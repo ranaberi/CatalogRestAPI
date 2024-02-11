@@ -1,3 +1,12 @@
+using Moq;
+using Microsoft.Extensions.Logging;
+using CatalogApi.Controllers;
+using CatalogApi.Repositories;
+using CatalogApi.Entities;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
+using Xunit;
 namespace CatalogUnitTests;
 
 public class ItemsControllerTests
@@ -10,7 +19,7 @@ public class ItemsControllerTests
         repositoryStub.Setup(repo => repo.GetItemAsync(It.IsAny<Guid>())).ReturnsAsync((Item)null);
 
         var loggerStub = new Mock<ILogger<ItemsController>>();
-        var controller = new ItemsControllerTests(repositoryStub.Object, loggerStub.Object);
+        var controller = new ItemsController(repositoryStub.Object, loggerStub.Object);
 
         //Act
         var result = await controller.GetItemAsync(Guid.NewGuid());
